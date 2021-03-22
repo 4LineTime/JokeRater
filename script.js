@@ -5,11 +5,29 @@ let joke_apis = [
 
 ]
 
+//Current user object
 let current_user = {
     "name":"",
-    "Jokes":{
+    "Jokes":[
+        {"JokeString":"","Source":"","Rating": 0}
+
+    ]
         
+    
+}
+
+function set_user_name(new_name){
+    //TODO Validate User String
+    if (new_name == true) {
+        current_user
     }
+
 }
 
 
+function getJokes() {
+    for (api in joke_apis) {
+
+    }
+
+}
