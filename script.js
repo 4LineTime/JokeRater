@@ -55,8 +55,8 @@ console.log(typeof(current_user_jokes))
 function createJokeList() {
     let i = 0
     while (i < 10) {
-        getJoke()
-        sleep(5000)        
+        //getJoke()
+        //sleep(5000)        
         current_user_jokes.forEach(obj => i++)
 
     }
