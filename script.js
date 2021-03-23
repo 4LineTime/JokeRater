@@ -25,7 +25,7 @@ let nameSpace = document.querySelector('#name-space')
 function set_user_name(new_name){
     //TODO Validate User String
     current_user.name = new_name
-    nameSpace.innerHTML=current_user.name
+    nameSpace.innerHTML=("User: " + current_user.name)
 }
 
 nameSubmitButton.addEventListener('click', function() {set_user_name(nameText.value)})
