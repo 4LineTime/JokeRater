@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>It's Just a Joke!</title>
+        <link rel="shortcut icon" type="image/ico" href="favicon_io/favicon.ico"
+        <!--The emoji graphics are from the open source project Twemoji. The graphics are copyright 2020 Twitter, Inc and other contributors. The graphics are licensed under CC-BY 4.0. You should review the license before usage in your project.-->
+        
+        
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
         <link href="style.css" rel="stylesheet" type="text/css"/>
@@ -11,18 +16,31 @@
 
     </head>
     <body>
-        <div class="content m-4 center-block" id="main">
-            <h1>It's Just a Joke</h1>
-            <h2>Funny or Not? Rate it!</h2>
-            <div><h3 id="name-space"></h3></div>
+        <div class="container" id="main">
+            <div class="row mx-auto" style="width:min-content;text-align:center">
+                <div class="col align-self-center col-sm me-auto mx-auto" style="width:min-content" >
+                    <img src="favicon_io/android-chrome-192x192.png" style="size: ;"/>
+                    <h1>It's Just a Joke!</h1>
 
-            <div class="input-group mb-3" class="collapse" id="name-form" style="width:40%; min-width: 400px;">
-                <input type="text" id="user-name" class="form-control" placeholder="Enter Name" aria-label="user-name" aria-description="submit-name">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-primary" type="button" id="submit-name" data-bs-toggle="collapse" data-bs-target="#name-form" aria-expanded="false" aria-controls="name-form">Submit</button>
+                    <h3 id="name-space"></h3>
+
+                    <div class="input-group mb-3" class="collapse" id="name-form" style="width:40%; min-width: 400px;">
+                        <input type="text" id="user-name" class="form-control" placeholder="Enter Your Name" aria-label="user-name" aria-description="submit-name">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary" type="button" id="submit-name" data-bs-toggle="collapse" data-bs-target="#name-form" aria-expanded="false" aria-controls="name-form">Submit</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            </div>
+        </div>
+        <div class="row mx-auto" style="text-align:center" id="joke-active">
+            <blockquote>Joke! Lorem Ipsum Dolor</blockquote>
+            <h4>Funny or Not? Rate it!</h4>
+            
+            
+        </div>
+
+        <div class="row" id="joke-rated"></div>
     </body>
 </html>
