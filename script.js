@@ -16,6 +16,12 @@ current_user_jokes = [{"JokeString":"string","Source":"api","Rating": 0},{"JokeS
 let nameText = document.querySelector('#user-name')
 let nameSubmitButton = document.querySelector('#submit-name')
 let nameSpace = document.querySelector('#name-space')
+let activeJoke = document.querySelector('#joke-active-text')
+let activeDiv = document.querySelector('#joke-active')
+let activeJokeSrc = document.querySelector('#joke-active-src')
+let yesButton = document.querySelector('#funny-yes')
+let noButton = document.querySelector('#funny-no')
+
 
 
 //Takes string and assigns it to the current user as name. Also updates the ui to display the name.
