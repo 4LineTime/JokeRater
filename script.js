@@ -9,7 +9,7 @@ let current_user_jokes = []
 let JOD_categories = ['jod','animal','blonde','knock-knock']
 
 //Debugging joke list
-//current_user_jokes = [{"foo":"bar"},{"foo":"bar"},{"foo":"bar"},{"foo":"bar"},{"foo":"bar"},{"foo":"bar"},{"foo":"bar"},{"foo":"bar"},{"foo":"bar"},{"foo":"bar"},]
+current_user_jokes = [{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0}]
 
 //Define variables for ui elements from index.html
 
@@ -72,9 +72,6 @@ function get_joke_of_the_day(category) {
 
 //TODO create function that sorts list by rating. This will be refreshed each time the user rates a joke.
 
-//JOD_categories.forEach((category) => {get_joke_of_the_day(category)})
-console.log(current_user_jokes)
-
 function wait(delay) {
     const beginning = Date.now()
     let current = 0
@@ -109,12 +106,23 @@ function fillJokeList() {
 
 function bring_out_the_kraken() {
 
-    JOD_categories.forEach((category) => {get_joke_of_the_day(category)})
+    // //Pull data from joke of the day
+    // JOD_categories.forEach((category) => {get_joke_of_the_day(category)})
+    
+    // //This is bad. I am sorry. When I figure out promises I will TODO fix this.
+    // getJoke()
+    // getJoke()
+    // getJoke()
+    // getJoke()
+    // getJoke()
+    // getJoke()
 
     //This seems to happen before the above line of code and I don't know why.
     // fillJokeList()
-    console.log(current_user_jokes.length)
+    //console.log(current_user_jokes.length)
     
+
+    //TODO UI FUNCTIONS
 
 }
 
