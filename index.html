@@ -2,12 +2,21 @@
 <html>
     <head>
         <title>It's Just a Joke!</title>
-        <link rel="shortcut icon" type="image/ico" href="favicon_io/favicon.ico"
+        <link rel="shortcut icon" type="image/ico" href="favicon_io/favicon.ico"/>
         <!--The emoji graphics are from the open source project Twemoji. The graphics are copyright 2020 Twitter, Inc and other contributors. The graphics are licensed under CC-BY 4.0. You should review the license before usage in your project.-->
         
-        
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <meta charset="utf-8">
+        <<!--link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>-->
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        
+        
         <link href="style.css" rel="stylesheet" type="text/css"/>
         
         <script async defer src="script.js"></script>
@@ -23,49 +32,34 @@
                     <h1>Just a Joke!</h1>
 
                     <h3 id="name-space"></h3>
-
-                    <div class="input-group" class="collapse" id="name-form">
+                    <div class="collapse multi-collapse show" id="formappear">
+                    <div class="input-group" id="name-form">
                         <input type="text" id="user-name" class="form-control" placeholder="Enter Your Name" aria-label="user-name" aria-description="submit-name">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-primary" type="button" id="submit-name" data-bs-toggle="collapse" data-bs-target="#name-form" aria-expanded="false" aria-controls="name-form">Submit</button>
-                        </div>
+                        <button class="btn btn-primary" type="button" id="submit-name" onclick="set_user_name(nameText.value)" data-toggle="collapse" data-target=".multi-collapse">Submit</button>
+                    </div>
                     </div>
                 </div>
             </div>
-
+            
         </div>
-
+        <div class="collapse multi-collapse" id="jokeappear">
         <div class="row mx-sm-1 justify-content-center text-center m-2" id="joke-active">
-            <div class="col-6 border border-primary text-center p-2 rounded-3 border-2  " >
+            <div class="col-6 border border-primary text-center p-2 rounded-3 border-2" >
                
                 <blockquote class="blockquote" id="joke-active-text">Joke! Lorem Ipsum Dolor</blockquote>
                 <figcaption class="blockquote-footer" id="joke-active-src">JokeAPI</figcaption>
                 <h5>Funny or Not?</h5>
 
                 <div class="btn-group-lg">
-                    <button class="btn btn-success m-1" type="button" id="funny-yes">Yes!</button>
-                    <button class="btn btn-danger m-1" type="button" id="funny-no">No!</button>
+                    <button class="btn btn-success m-1" type="button" onclick="rateJoke(1)" id="funny-yes">Yes!</button>
+                    <button class="btn btn-danger m-1" type="button" onclick="rateJoke(0)" id="funny-no">No!</button>
                 </div>
 
             </div>
         </div>
-
-        <div class="row mx-sm-1 justify-content-center text-center m-2" class="joke-rated">
-            <div class="col-6 border border-success text-center p-2 rounded-3 border-2" >
-                <blockquote class="blockquote" id="joke-active-text">Joke! Lorem Ipsum Dolor</blockquote>
-                <figcaption class="blockquote-footer" id="joke-active-src">JokeAPI</figcaption>
-                <h5 id="rating">Funny</h5>
-            </div>
         </div>
-
-        <div class="row mx-sm-1 justify-content-center text-center m-2" class="joke-rated">
-            <div class="col-6 border border-dark text-center p-2 rounded-3" >
-                <blockquote class="blockquote" id="joke-active-text">Joke! Lorem Ipsum Dolor</blockquote>
-                <figcaption class="blockquote-footer" id="joke-active-src">JokeAPI</figcaption>
-                <h5 id="rating">Unfunny</h5>
-            </div>
+        <div id="rated-jokes-list">
+        <div id='joke-rated'></div>
         </div>
-
-        <div class="row" id="joke-rated"></div>
     </body>
 </html>

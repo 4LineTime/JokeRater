@@ -5,34 +5,110 @@ const jokeofhteday_api_url = 'https://api.jokes.one/jod?category='
 let current_user_name =""
 let current_user_jokes = []
 
+
 //Categories
 let JOD_categories = ['jod','animal','blonde','knock-knock']
 
+//joke sorting variables
+let unrated_jokes = [{"JokeString":"Why did the chicken cross the road? No guts.","Source":"api","Rating": 0}]
+let id = 0
+let activatedJoke
+
+
+
 //Debugging joke list
-current_user_jokes = [{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0}]
+//unrated_jokes = [{"JokeString":"Why did the chicken cross the road? No guts.","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0}]
+
+
 
 //Define variables for ui elements from index.html
 
 let nameText = document.querySelector('#user-name')
 let nameSubmitButton = document.querySelector('#submit-name')
 let nameSpace = document.querySelector('#name-space')
-let activeJoke = document.querySelector('#joke-active-text')
+let activeJokeText = document.querySelector('#joke-active-text')
 let activeDiv = document.querySelector('#joke-active')
 let activeJokeSrc = document.querySelector('#joke-active-src')
 let yesButton = document.querySelector('#funny-yes')
 let noButton = document.querySelector('#funny-no')
-
-
 
 //Takes string and assigns it to the current user as name. Also updates the ui to display the name.
 function set_user_name(new_name){
     //TODO Validate User String
     current_user_name = new_name
     nameSpace.innerHTML=("User: " + current_user_name)
+    
 }
 
 //Name submission event listener
-nameSubmitButton.addEventListener('click', function() {set_user_name(nameText.value)})
+//nameSubmitButton.addEventListener('click', function() {set_user_name(nameText.value)})
+
+
+//Puts a new joke into the rating box
+function prepare_joke_for_rating(prebaked){
+    console.log(prebaked)
+    let text = prebaked.JokeString
+    let src = prebaked.Source
+    activeJokeText.innerHTML=(text)
+    activeJokeSrc.innerHTML=(src)
+    
+}
+
+//resets the joke rating box and gets a new joke for the unrated joke list if it is low on jokes
+function resetJoke(){
+    activatedJoke = unrated_jokes.shift()
+    if (unrated_jokes.length < 2) {getJoke()}
+    prepare_joke_for_rating(activatedJoke)
+}
+
+//puts rated joke in current_user list
+function rateJoke(rating) {
+    activatedJoke.Rating = rating
+    updateRatedJokeDisplay(activatedJoke.Rating,activatedJoke.JokeString,activatedJoke.Source)
+    current_user_jokes.push(activatedJoke)
+    resetJoke()
+
+}
+
+//Places rated joke in box below joke rating box
+function updateRatedJokeDisplay(rating, joke_string, source){
+    console.log('updateRated')
+    let codeBlock = document.createElement('div')
+    let parentDiv = document.getElementById('rated-jokes-list')
+    codeBlock.setAttribute('class', 'row mx-sm-1 justify-content-center text-center m-2')
+    codeBlock.setAttribute('id', 'joke-rated')
+    let precedingElement = document.getElementById('joke-rated')
+    if (rating == 1) {
+        codeBlock.innerHTML = `
+                
+
+            <div class="col-6 border border-success text-center p-2 rounded-3 border-2" >
+                <blockquote class="blockquote" id="joke-active-text">${joke_string}</blockquote>
+                <figcaption class="blockquote-footer" id="joke-active-src">${source}</figcaption>
+                <h5 id="rating">Funny</h5>
+            </div>
+
+    `
+    parentDiv.insertBefore(codeBlock,precedingElement)
+    } else {codeBlock.innerHTML =`
+
+            <div class="col-6 border border-dark text-center p-2 rounded-3" >
+                <blockquote class="blockquote" id="joke-active-text">${joke_string}</blockquote>
+                <figcaption class="blockquote-footer" id="joke-active-src">${source}</figcaption>
+                <h5 id="rating">Unfunny</h5>
+            </div>
+
+    `
+    parentDiv.appendChild(codeBlock)
+    }
+
+
+}
+
+//TODO create function that removes duplicates from list.
+
+//TODO create function that sorts list by rating. This will be refreshed each time the user rates a joke.
+
 
 //Joke API Fetch Function
 function getJoke() {
@@ -41,8 +117,9 @@ function getJoke() {
             //console.log(result)
             let jokeString = result.joke
             let apiName = 'JokeAPI'
-            let jokeObj = {"JokeString":jokeString,"Source":apiName,"Rating": 0}
-            current_user_jokes.push(jokeObj)
+            let jokeID = id++
+            let jokeObj = {"JokeID": jokeID, "JokeString":jokeString,"Source":apiName,"Rating": 0}
+            unrated_jokes.push(jokeObj)
     }
     )
     .catch( error => {
@@ -59,13 +136,14 @@ function get_joke_of_the_day(category) {
 	 if (this.readyState == 4 && this.status == 200) {
         let response = JSON.parse(this.response)
         //console.log(`https://api.jokes.one/jod?category=${category}`)
-        //console.log(response.contents.jokes[0].description)
+        // console.log(response.contents.jokes[0].description)
 	    // Access the result here
         let jokeString = response.contents.jokes[0].joke.text
         let apiName = response.contents.jokes[0].description
-        let jokeObj = {"JokeString":jokeString,"Source":apiName,"Rating": 0}
-        current_user_jokes.push(jokeObj)
-         
+        let jokeID = id++
+        let jokeObj = {"JokeID": jokeID,"JokeString":jokeString,"Source":apiName,"Rating": 0}
+        
+        unrated_jokes.push(jokeObj)         
 	 }
     };
     xhttp.open("GET", `https://api.jokes.one/jod?category=${category}`, true);
@@ -74,10 +152,7 @@ function get_joke_of_the_day(category) {
     xhttp.send();
 }
 
-//TODO create function that removes duplicates from list.
-
-//TODO create function that sorts list by rating. This will be refreshed each time the user rates a joke.
-
+//Three unused functions attempting to pause the application and wait for data to load
 function wait(delay) {
     const beginning = Date.now()
     let current = 0
@@ -89,48 +164,42 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const waitPromise = new Promise((resolve, reject) => {
+const waitPromise = new Promise((resolve, reject) => {})
 
-})
+function setup() {
 
-function fillJokeList() {
-
-    do {getJoke()} while (current_user_jokes.length < 10)
-    //  {
-    //     console.log(current_user_jokes.length)
-
-    //     getJoke().then(console.log(current_user_jokes.length))
-
-    //     //debugging joke list filler
-    //     // let jokeObj = {"JokeString":"jokeString","Source":"apiName","Rating": 0}
-    //     // current_user_jokes.push(jokeObj)
-
-    // }
-    // console.log('Joke list completed')
-    // console.log(current_user_jokes)
-}
-
-function bring_out_the_kraken() {
-
-    // //Pull data from joke of the day
-    // JOD_categories.forEach((category) => {get_joke_of_the_day(category)})
+    //Pull data from joke of the day
     
-    // //This is bad. I am sorry. When I figure out promises I will TODO fix this.
-    // getJoke()
-    // getJoke()
-    // getJoke()
-    // getJoke()
-    // getJoke()
-    // getJoke()
 
-    //This seems to happen before the above line of code and I don't know why.
-    // fillJokeList()
-    //console.log(current_user_jokes.length)
+    const myPromise = new Promise((resolve, reject) => {
+        console.log(resolve)
+      });
+
+
+    //let promise = new Promise(prepare_joke_for_rating())
+    // for (let x = 0; x < 5; x++) {
+    //     promises.push(fetchCatFact(url))
+    // }
+
+    myPromise
+    .then(getJoke())
+    .then(JOD_categories.forEach((category) => {get_joke_of_the_day(category)}))
+    .then(console.log(unrated_jokes))
+    .then(activatedJoke = unrated_jokes[0])
+    .then(prepare_joke_for_rating(activatedJoke))
+    .then(prepare_joke_for_rating(unrated_jokes[0]))
+    .then(console.log(unrated_jokes))
+
+    .catch(err => { console.log(err) });
     
 
     //TODO UI FUNCTIONS
 
+
+
+    
+
 }
 
-bring_out_the_kraken()
+setup()
 console.log(current_user_jokes)
