@@ -14,12 +14,8 @@ let unrated_jokes = [{"JokeString":"Why did the chicken cross the road? No guts.
 let id = 0
 let activatedJoke
 
-
-
 //Debugging joke list
 //unrated_jokes = [{"JokeString":"Why did the chicken cross the road? No guts.","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0},{"JokeString":"string","Source":"api","Rating": 0}]
-
-
 
 //Define variables for ui elements from index.html
 
@@ -112,7 +108,8 @@ function updateRatedJokeDisplay(rating, joke_string, source){
 
 //Joke API Fetch Function
 function getJoke() {
-    fetch(joke_api_url)
+    // return a Promise 
+    return fetch(joke_api_url)
         .then( response => response.json()).then( (result) =>{
             //console.log(result)
             let jokeString = result.joke
@@ -120,84 +117,52 @@ function getJoke() {
             let jokeID = id++
             let jokeObj = {"JokeID": jokeID, "JokeString":jokeString,"Source":apiName,"Rating": 0}
             unrated_jokes.push(jokeObj)
-    }
+        }
     )
-    .catch( error => {
-        alert('Something went wrong. JokeAPI.dev is unavailable.')  // user friendly - most users can't do anything about a stack trace
-        console.log(error)  // for the developer to debug the app
-        window.stop()
-    })
+    // .catch( error => {
+    //     alert('Something went wrong. JokeAPI.dev is unavailable.')  // user friendly - most users can't do anything about a stack trace
+    //     console.log(error)  // for the developer to debug the app
+    //     window.stop()
+    // })
 }
 
 //From https://jokes.one/api/joke/#js
 function get_joke_of_the_day(category) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-	 if (this.readyState == 4 && this.status == 200) {
-        let response = JSON.parse(this.response)
-        //console.log(`https://api.jokes.one/jod?category=${category}`)
-        // console.log(response.contents.jokes[0].description)
-	    // Access the result here
-        let jokeString = response.contents.jokes[0].joke.text
-        let apiName = response.contents.jokes[0].description
-        let jokeID = id++
-        let jokeObj = {"JokeID": jokeID,"JokeString":jokeString,"Source":apiName,"Rating": 0}
-        
-        unrated_jokes.push(jokeObj)         
-	 }
-    };
-    xhttp.open("GET", `https://api.jokes.one/jod?category=${category}`, true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.setRequestHeader("X-JokesOne-Api-Secret", "YOUR API HERE");
-    xhttp.send();
+    // fetch does everything xhr does with less code 
+    return fetch(`https://api.jokes.one/jod?category=${category}`).then( response => response.json() )
+        .then( response => {
+            let jokeString = response.contents.jokes[0].joke.text
+            let apiName = response.contents.jokes[0].description
+            let jokeID = id++
+            let jokeObj = {"JokeID": jokeID,"JokeString":jokeString,"Source":apiName,"Rating": 0}
+            
+            unrated_jokes.push(jokeObj)         
+        })
 }
-
-//Three unused functions attempting to pause the application and wait for data to load
-function wait(delay) {
-    const beginning = Date.now()
-    let current = 0
-    while ((current - beginning) < delay){current = Date.now()}
-    console.log(beginning,current)
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-const waitPromise = new Promise((resolve, reject) => {})
 
 function setup() {
 
     //Pull data from joke of the day
+
+    // goal - getJoke and call get_joke_of_the_day for each of the categories 
+
+    let jokeRequestPromises = [ getJoke() ]
+    JOD_categories.forEach( category => {
+        jokeRequestPromises.push(get_joke_of_the_day(category)) 
+    })
     
 
-    const myPromise = new Promise((resolve, reject) => {
-        console.log(resolve)
-      });
-
-
-    //let promise = new Promise(prepare_joke_for_rating())
-    // for (let x = 0; x < 5; x++) {
-    //     promises.push(fetchCatFact(url))
-    // }
-
-    myPromise
-    .then(getJoke())
-    .then(JOD_categories.forEach((category) => {get_joke_of_the_day(category)}))
-    .then(console.log(unrated_jokes))
+    Promise.all(jokeRequestPromises)   // make all the requests 
+    .then(console.log(unrated_jokes))            // all the API responses 
     .then(activatedJoke = unrated_jokes[0])
     .then(prepare_joke_for_rating(activatedJoke))
     .then(prepare_joke_for_rating(unrated_jokes[0]))
     .then(console.log(unrated_jokes))
 
-    .catch(err => { console.log(err) });
+    .catch(err => { console.log(err) });  // deal with all the errors here 
     
 
     //TODO UI FUNCTIONS
-
-
-
-    
 
 }
 
